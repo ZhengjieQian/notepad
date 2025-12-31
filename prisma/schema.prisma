@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model - Represents a user account in our authentication system
+// This model stores both OAuth users (Google, GitHub, etc.) and credential users (email/password)
+model User {
+  id            String    @id @default(cuid())     // Primary key using CUID (Collision-resistant Unique Identifier)
+  name          String?                            // Optional user display name
+  email         String?   @unique                  // Email address with unique constraint
+  emailVerified DateTime?                          // Timestamp when email was verified (optional)
+  image         String?                            // User avatar/profile picture URL (optional)
+  password      String?                            // Hashed password (optional - OAuth users may not have passwords)
+  createdAt     DateTime  @default(now())          // Record creation timestamp
+  updatedAt     DateTime  @updatedAt               // Last update timestamp (auto-updated)
+
+  // Relationship fields - Define how this model relates to other models
+  accounts      Account[]                          // One user can have multiple linked accounts (for OAuth providers)
+  sessions      Session[]                          // One user can have multiple active sessions (for database-stored sessions)
+}
+
+// Account model - Stores OAuth provider account information
+// This links users to their accounts on external providers (Google, GitHub, etc.)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String                         // Foreign key referencing User.id
+  type              String                         // Account type (e.g., "oauth", "credentials")
+  provider          String                         // OAuth provider name (e.g., "google", "github")
+  providerAccountId String                         // User ID from the OAuth provider
+  refresh_token     String? @db.Text               // OAuth refresh token (can be very long)
+  access_token      String? @db.Text               // OAuth access token
+  expires_at        Int?                           // Access token expiration timestamp
+  token_type        String?                        // Token type (e.g., "Bearer")
+  scope             String?                        // OAuth authorization scope
+  id_token          String? @db.Text               // OpenID Connect ID token
+  session_state     String?                        // OAuth session state
+
+  // Define relationship with User model, with cascade delete
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Composite unique constraint: ensures one account per provider per user
+  @@unique([provider, providerAccountId])
+}
+
+// Session model - Stores user session information
+// Used when session strategy is set to "database" instead of "jwt"
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique                   // Unique session token
+  userId       String                             // Foreign key referencing User.id
+  expires      DateTime                           // Session expiration time
+  
+  // Define relationship with User model
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// VerificationToken model - Stores email verification tokens
+// Used for magic link authentication and email verification flows
+model VerificationToken {
+  identifier String                               // Usually an email address
+  token      String   @unique                     // Unique verification token
+  expires    DateTime                             // Token expiration time
+
+  // Composite unique constraint: ensures unique identifier-token combinations
+  @@unique([identifier, token])
+}
