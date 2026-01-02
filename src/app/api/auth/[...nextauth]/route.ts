@@ -5,7 +5,10 @@ import Google from 'next-auth/providers/google';
 import { LoginSchema } from '@/schemas';
 import { getUserByEmail } from '@/data/user';
 import bcrypt from 'bcryptjs';
-import NextAuth from 'next-auth';
+import NextAuth, { getServerSession } from 'next-auth';
+import type { Session, User } from 'next-auth';
+import type { AdapterUser } from 'next-auth/adapters';
+import type { JWT } from 'next-auth/jwt';
 
 export const authConfig = {
   adapter: PrismaAdapter(prisma),
@@ -14,6 +17,20 @@ export const authConfig = {
   },
   pages: {
     signIn: '/login',
+  },
+  callbacks: {
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    async jwt({ token, user }: { token: JWT; user?: User | AdapterUser }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    },
   },
   providers: [
     Google({
@@ -51,4 +68,9 @@ export const authConfig = {
 
 const handler = NextAuth(authConfig);
 
-export { handler as GET, handler as POST }; 
+export const GET = handler;
+export const POST = handler;
+
+export function auth() {
+  return getServerSession(authConfig);
+}

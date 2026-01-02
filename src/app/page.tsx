@@ -18,9 +18,14 @@ export default async function Home() {
             <p className="max-w-sm text-sm text-muted-foreground">
               You have logged in. Head to your workspace to continue.
             </p>
-            <Button asChild size="lg" className="px-8">
-              <Link href="/user">Open user menu</Link>
-            </Button>
+            <div className="flex flex-col items-center gap-3 sm:flex-row">
+              <Button asChild size="lg" className="px-8">
+                <Link href="/user">Open user menu</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="px-8">
+                <Link href="/upload">Upload a PDF</Link>
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
