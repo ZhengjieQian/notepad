@@ -74,6 +74,16 @@ export async function POST(request: Request) {
       const result = await parser.getText();
       extractedText = result.text;
       await parser.destroy();
+
+      // // Log extracted text for verification
+      // console.log("=== PDF Text Extraction Success ===");
+      // console.log(`Document ID: ${documentId}`);
+      // console.log(`Total text length: ${extractedText.length} characters`);
+      // console.log(`\n--- First 500 characters ---`);
+      // console.log(extractedText.substring(0, 500));
+      // console.log(`\n--- Last 200 characters ---`);
+      // console.log(extractedText.substring(Math.max(0, extractedText.length - 200)));
+      // console.log("=================================\n");
     } catch (parseError) {
       console.error("PDF parsing error:", parseError);
        await prisma.document.update({
