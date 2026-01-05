@@ -1,24 +1,22 @@
-// /pages/api/vectorize.ts (example)
-import { NextApiRequest, NextApiResponse } from 'next';
+// App Router API endpoint for vectorizing document text
+import { NextRequest, NextResponse } from 'next/server';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { PineconeStore } from '@langchain/pinecone';
 import { Document } from '@langchain/core/documents';
-// import { getPdfTextFromDbOrS3 } from '~/server/utils/documentUtils'; // Your utility
 
-export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
-    }
-
-    const { documentId, pdfText } = req.body; // Assume pdfText is passed after parsing
-
-    if (!pdfText || !documentId) {
-        return res.status(400).json({ message: 'Missing pdfText or documentId' });
-    }
-
+export async function POST(req: NextRequest) {
     try {
+        const body = await req.json();
+        const { documentId, pdfText } = body;
+
+        if (!pdfText || !documentId) {
+            return NextResponse.json(
+                { message: 'Missing pdfText or documentId' },
+                { status: 400 }
+            );
+        }
         const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 1000, // Target size of each chunk (in characters)
             chunkOverlap: 200, // Overlap between chunks
@@ -54,6 +52,14 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
             modelName: "text-embedding-ada-002",
         });
 
+        // Test embedding generation on first chunk
+        console.log('\n=== Testing Embedding Generation ===');
+        console.log('First chunk text preview:', chunks[0].substring(0, 200));
+        const testEmbedding = await embeddings.embedQuery(chunks[0]);
+        console.log('Embedding vector dimension:', testEmbedding.length);
+        console.log('First 10 values of embedding vector:', testEmbedding.slice(0, 10));
+        console.log('Embedding generation successful! ✓\n');
+
         // Step 5: Upsert documents to Pinecone (embed and store)
         // Using documentId as namespace for easy isolation and management
         await PineconeStore.fromDocuments(lcDocuments, embeddings, {
@@ -64,7 +70,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
         console.log(`Successfully embedded and stored ${lcDocuments.length} chunks for document ${documentId} in Pinecone.`);
         
-        return res.status(200).json({ 
+        return NextResponse.json({ 
             message: `Successfully vectorized and stored document ${documentId}`,
             chunkCount: lcDocuments.length,
             // 返回前3个块的预览信息，方便查看分块效果
@@ -72,11 +78,23 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
                 index: i,
                 length: chunk.length,
                 preview: chunk.substring(0, 100) + (chunk.length > 100 ? '...' : '')
-            }))
-        });
+            })),
+            // 返回embedding测试结果
+            embeddingPreview: {
+                dimension: testEmbedding.length,
+                firstValues: testEmbedding.slice(0, 10),
+                chunkText: chunks[0].substring(0, 200) + (chunks[0].length > 200 ? '...' : '')
+            }
+        }, { status: 200 });
 
     } catch (error) {
-        console.error("Error chunking text:", error);
-        return res.status(500).json({ message: 'Error chunking text' });
+        console.error("Error processing document:", error);
+        return NextResponse.json(
+            { 
+                message: 'Error processing document', 
+                error: error instanceof Error ? error.message : 'Unknown error' 
+            },
+            { status: 500 }
+        );
     }
 }

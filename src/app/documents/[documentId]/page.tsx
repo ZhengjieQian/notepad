@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileText, Calendar, HardDrive, Download, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import VectorizeButton from "@/components/documents/VectorizeButton";
 
 type DocumentStatus = "pending_upload" | "uploaded" | "parsing" | "processed" | "failed_parsing" | "failed_processing";
 
@@ -156,21 +157,29 @@ export default async function DocumentDetailPage({
 
         {/* 提取的文本内容 */}
         {document.extractedText && (
-          <Card>
-            <CardHeader>
-              <CardTitle>提取的文本内容</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                共 {document.extractedText.length} 个字符
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="max-h-96 overflow-y-auto">
-                <pre className="whitespace-pre-wrap text-sm bg-muted p-4 rounded-lg">
-                  {document.extractedText}
-                </pre>
-              </div>
-            </CardContent>
-          </Card>
+          <>
+            {/* 向量化按钮 */}
+            <VectorizeButton 
+              documentId={document.id} 
+              extractedText={document.extractedText} 
+            />
+
+            <Card>
+              <CardHeader>
+                <CardTitle>提取的文本内容</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  共 {document.extractedText.length} 个字符
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="max-h-96 overflow-y-auto">
+                  <pre className="whitespace-pre-wrap text-sm bg-muted p-4 rounded-lg">
+                    {document.extractedText}
+                  </pre>
+                </div>
+              </CardContent>
+            </Card>
+          </>
         )}
 
         {/* 如果没有提取文本，显示提示 */}
