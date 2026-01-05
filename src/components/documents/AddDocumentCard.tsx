@@ -11,8 +11,8 @@ export default function AddDocumentCard() {
           <div className="rounded-full bg-primary/10 p-4 mb-3">
             <Plus className="h-8 w-8 text-primary" />
           </div>
-          <h3 className="font-semibold text-lg">添加文档</h3>
-          <p className="text-sm text-muted-foreground mt-1">上传新的 PDF 文件</p>
+          <h3 className="font-semibold text-lg">Add Document</h3>
+          <p className="text-sm text-muted-foreground mt-1">Upload a new PDF file</p>
         </CardContent>
       </Card>
     </Link>

@@ -25,7 +25,7 @@ export async function GET(
   try {
     const { documentId } = await params;
 
-    // 验证文档存在且属于当前用户
+    // Verify document exists and belongs to current user
     const document = await prisma.document.findUnique({
       where: {
         id: documentId,
@@ -40,17 +40,17 @@ export async function GET(
       );
     }
 
-    // 生成预签名下载 URL（有效期 1 小时）
+    // Generate pre-signed download URL (valid for 1 hour)
     const command = new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME!,
       Key: document.s3Key,
     });
 
     const downloadUrl = await getSignedUrl(s3Client, command, { 
-      expiresIn: 3600 // 1 小时
+      expiresIn: 3600 // 1 hour
     });
 
-    // 重定向到预签名 URL
+    // Redirect to pre-signed URL
     return NextResponse.redirect(downloadUrl);
   } catch (error: any) {
     console.error("Error generating download URL:", error);

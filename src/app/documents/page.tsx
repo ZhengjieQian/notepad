@@ -53,10 +53,10 @@ export default async function DocumentsPage() {
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            我的文档
+            My Documents
           </h1>
           <p className="text-sm text-muted-foreground">
-            管理您上传的 PDF 文档，共 {documents.length} 个文档
+            Manage your uploaded PDF documents, {documents.length} total
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default async function DocumentsPage() {
         {documents.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">
-              还没有上传任何文档，点击上方卡片开始上传
+              No documents uploaded yet, click the card above to start uploading
             </p>
           </div>
         )}

@@ -32,12 +32,12 @@ function formatDate(date: Date): string {
 
 function getStatusConfig(status: DocumentStatus) {
   const configs = {
-    pending_upload: { label: "待上传", variant: "outline" as const, color: "text-gray-500" },
-    uploaded: { label: "已上传", variant: "secondary" as const, color: "text-blue-500" },
-    parsing: { label: "解析中", variant: "secondary" as const, color: "text-yellow-500" },
-    processed: { label: "已完成", variant: "default" as const, color: "text-green-500" },
-    failed_parsing: { label: "解析失败", variant: "destructive" as const, color: "text-red-500" },
-    failed_processing: { label: "处理失败", variant: "destructive" as const, color: "text-red-500" },
+    pending_upload: { label: "Pending Upload", variant: "outline" as const, color: "text-gray-500" },
+    uploaded: { label: "Uploaded", variant: "secondary" as const, color: "text-blue-500" },
+    parsing: { label: "Parsing", variant: "secondary" as const, color: "text-yellow-500" },
+    processed: { label: "Completed", variant: "default" as const, color: "text-green-500" },
+    failed_parsing: { label: "Parse Failed", variant: "destructive" as const, color: "text-red-500" },
+    failed_processing: { label: "Process Failed", variant: "destructive" as const, color: "text-red-500" },
   };
   return configs[status] || configs.pending_upload;
 }
@@ -75,15 +75,15 @@ export default async function DocumentDetailPage({
   return (
     <main className="min-h-screen bg-background px-4 py-12">
       <div className="mx-auto max-w-4xl space-y-6">
-        {/* 返回按钮 */}
+        {/* Back button */}
         <Link href="/documents">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            返回文档列表
+            Back to Documents
           </Button>
         </Link>
 
-        {/* 文档标题 */}
+        {/* Document title */}
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <FileText className="h-8 w-8 text-primary" />
@@ -98,17 +98,17 @@ export default async function DocumentDetailPage({
           </div>
         </div>
 
-        {/* 元数据卡片 */}
+        {/* Metadata card */}
         <Card>
           <CardHeader>
-            <CardTitle>文档信息</CardTitle>
+            <CardTitle>Document Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
                 <HardDrive className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">文件大小</p>
+                  <p className="text-sm font-medium">File Size</p>
                   <p className="text-sm text-muted-foreground">{formatFileSize(document.size)}</p>
                 </div>
               </div>
@@ -116,15 +116,15 @@ export default async function DocumentDetailPage({
               <div className="flex items-center gap-3">
                 <FileText className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">文件类型</p>
-                  <p className="text-sm text-muted-foreground">{document.contentType || "未知"}</p>
+                  <p className="text-sm font-medium">File Type</p>
+                  <p className="text-sm text-muted-foreground">{document.contentType || "Unknown"}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">上传时间</p>
+                  <p className="text-sm font-medium">Upload Time</p>
                   <p className="text-sm text-muted-foreground">{formatDate(document.createdAt)}</p>
                 </div>
               </div>
@@ -132,33 +132,33 @@ export default async function DocumentDetailPage({
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">最后更新</p>
+                  <p className="text-sm font-medium">Last Updated</p>
                   <p className="text-sm text-muted-foreground">{formatDate(document.updatedAt)}</p>
                 </div>
               </div>
             </div>
 
             <div className="pt-4 border-t">
-              <p className="text-sm font-medium mb-2">S3 存储路径</p>
+              <p className="text-sm font-medium mb-2">S3 Storage Path</p>
               <code className="text-xs bg-muted px-2 py-1 rounded">{document.s3Key}</code>
             </div>
 
-            {/* 下载按钮 */}
+            {/* Download button */}
             <div className="pt-4 flex gap-3">
               <Link href={`/api/documents/${document.id}/download`} target="_blank">
                 <Button>
                   <Download className="h-4 w-4 mr-2" />
-                  下载原文件
+                  Download Original File
                 </Button>
               </Link>
             </div>
           </CardContent>
         </Card>
 
-        {/* 提取的文本内容 */}
+        {/* Extracted text content */}
         {document.extractedText && (
           <>
-            {/* 向量化按钮 */}
+            {/* Vectorization button */}
             <VectorizeButton 
               documentId={document.id} 
               extractedText={document.extractedText} 
@@ -166,9 +166,9 @@ export default async function DocumentDetailPage({
 
             <Card>
               <CardHeader>
-                <CardTitle>提取的文本内容</CardTitle>
+                <CardTitle>Extracted Text Content</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  共 {document.extractedText.length} 个字符
+                  Total {document.extractedText.length} characters
                 </p>
               </CardHeader>
               <CardContent>
@@ -182,29 +182,29 @@ export default async function DocumentDetailPage({
           </>
         )}
 
-        {/* 如果没有提取文本，显示提示 */}
+        {/* If no extracted text, show message */}
         {!document.extractedText && document.status === "processed" && (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">该文档没有提取到文本内容</p>
+              <p className="text-muted-foreground">No text content extracted from this document</p>
             </CardContent>
           </Card>
         )}
 
-        {/* 如果正在处理，显示提示 */}
+        {/* If processing, show message */}
         {(document.status === "pending_upload" || document.status === "uploaded" || document.status === "parsing") && (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">文档正在处理中，请稍后刷新页面查看提取的文本</p>
+              <p className="text-muted-foreground">Document is being processed, please refresh the page later to view extracted text</p>
             </CardContent>
           </Card>
         )}
 
-        {/* 如果处理失败，显示错误 */}
+        {/* If processing failed, show error */}
         {(document.status === "failed_parsing" || document.status === "failed_processing") && (
           <Card className="border-destructive">
             <CardContent className="py-12 text-center">
-              <p className="text-destructive">文档处理失败，无法提取文本内容</p>
+              <p className="text-destructive">Document processing failed, unable to extract text content</p>
             </CardContent>
           </Card>
         )}

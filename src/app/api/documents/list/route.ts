@@ -12,7 +12,7 @@ export async function GET() {
   try {
     const documents = await prisma.document.findMany({
       where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" }, // 最新的在前
+      orderBy: { createdAt: "desc" }, // Most recent first
       select: {
         id: true,
         fileName: true,

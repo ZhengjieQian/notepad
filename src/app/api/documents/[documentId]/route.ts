@@ -24,11 +24,11 @@ export async function DELETE(
   try {
     const { documentId } = await params;
 
-    // 1. 验证文档存在且属于当前用户
+    // 1. Verify document exists and belongs to current user
     const document = await prisma.document.findUnique({
       where: {
         id: documentId,
-        userId: session.user.id, // 确保用户只能删除自己的文档
+        userId: session.user.id, // Ensure user can only delete their own documents
       },
     });
 
@@ -39,7 +39,7 @@ export async function DELETE(
       );
     }
 
-    // 2. 先删除 S3 文件（如果这步失败，数据库记录还在，用户可以重试）
+    // 2. Delete S3 file first (if this fails, database record remains, user can retry)
     try {
       const deleteCommand = new DeleteObjectCommand({
         Bucket: process.env.AWS_S3_BUCKET_NAME!,
@@ -49,14 +49,14 @@ export async function DELETE(
       console.log(`Successfully deleted S3 file: ${document.s3Key}`);
     } catch (s3Error) {
       console.error("Error deleting from S3:", s3Error);
-      // S3 删除失败，返回错误但不继续删除数据库记录
+      // S3 deletion failed, return error without deleting database record
       return NextResponse.json(
         { error: "Failed to delete file from storage" },
         { status: 500 }
       );
     }
 
-    // 3. 删除数据库记录
+    // 3. Delete database record
     await prisma.document.delete({
       where: { id: documentId },
     });
@@ -76,7 +76,7 @@ export async function DELETE(
   }
 }
 
-// GET - 获取单个文档详情（为后续详情页准备）
+// GET - Retrieve single document details (for detail page)
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ documentId: string }> }

@@ -20,7 +20,7 @@ export default async function Home() {
             </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row">
               <Button asChild size="lg" className="px-8">
-                <Link href="/documents">我的文档</Link>
+                <Link href="/documents">My Documents</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="px-8">
                 <Link href="/upload">Upload a PDF</Link>

@@ -33,7 +33,7 @@ export default function VectorizeButton({ documentId, extractedText }: Vectorize
 
   const handleVectorize = async () => {
     if (!extractedText) {
-      setError("没有可用的文本内容");
+      setError("No text content available");
       return;
     }
 
@@ -55,14 +55,14 @@ export default function VectorizeButton({ documentId, extractedText }: Vectorize
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "向量化处理失败");
+        throw new Error(errorData.message || "Vectorization failed");
       }
 
       const data = await response.json();
       setResult(data);
     } catch (err: any) {
       console.error("Vectorization error:", err);
-      setError(err.message || "处理失败");
+      setError(err.message || "Processing failed");
     } finally {
       setIsProcessing(false);
     }
@@ -73,7 +73,7 @@ export default function VectorizeButton({ documentId, extractedText }: Vectorize
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>向量化处理</span>
+            <span>Vectorization Processing</span>
             <Button
               onClick={handleVectorize}
               disabled={isProcessing || !extractedText}
@@ -81,18 +81,18 @@ export default function VectorizeButton({ documentId, extractedText }: Vectorize
               {isProcessing ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  处理中...
+                  Processing...
                 </>
               ) : (
                 <>
                   <Sparkles className="h-4 w-4 mr-2" />
-                  生成向量嵌入
+                  Generate Embeddings
                 </>
               )}
             </Button>
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            将文档文本分块并生成 OpenAI Embeddings，存储到 Pinecone 向量数据库
+            Chunk document text and generate OpenAI Embeddings, store in Pinecone vector database
           </p>
         </CardHeader>
         <CardContent>
@@ -112,29 +112,29 @@ export default function VectorizeButton({ documentId, extractedText }: Vectorize
 
               <div className="grid gap-4">
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm font-medium mb-2">处理统计</p>
+                  <p className="text-sm font-medium mb-2">Processing Statistics</p>
                   <div className="space-y-1 text-sm text-muted-foreground">
-                    <p>总分块数: <Badge variant="secondary">{result.chunkCount}</Badge></p>
+                    <p>Total Chunks: <Badge variant="secondary">{result.chunkCount}</Badge></p>
                   </div>
                 </div>
 
                 {result.embeddingPreview && (
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm font-medium mb-2">Embedding 测试结果</p>
+                    <p className="text-sm font-medium mb-2">Embedding Test Results</p>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <p className="text-muted-foreground mb-1">第一个分块文本预览:</p>
+                        <p className="text-muted-foreground mb-1">First Chunk Text Preview:</p>
                         <pre className="text-xs bg-background p-2 rounded border overflow-x-auto">
                           {result.embeddingPreview.chunkText}
                         </pre>
                       </div>
                       <div>
                         <p className="text-muted-foreground">
-                          向量维度: <Badge variant="outline">{result.embeddingPreview.dimension}</Badge>
+                          Vector Dimension: <Badge variant="outline">{result.embeddingPreview.dimension}</Badge>
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground mb-1">向量前10个值:</p>
+                        <p className="text-muted-foreground mb-1">First 10 Vector Values:</p>
                         <pre className="text-xs bg-background p-2 rounded border overflow-x-auto">
                           {JSON.stringify(result.embeddingPreview.firstValues, null, 2)}
                         </pre>
@@ -144,16 +144,16 @@ export default function VectorizeButton({ documentId, extractedText }: Vectorize
                 )}
 
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm font-medium mb-2">分块预览 (前3个)</p>
+                  <p className="text-sm font-medium mb-2">Chunk Preview (First 3)</p>
                   <div className="space-y-2">
                     {result.sampleChunks.map((chunk) => (
                       <div key={chunk.index} className="p-2 bg-background rounded border">
                         <div className="flex items-center gap-2 mb-1">
                           <Badge variant="outline" className="text-xs">
-                            块 {chunk.index + 1}
+                            Chunk {chunk.index + 1}
                           </Badge>
                           <span className="text-xs text-muted-foreground">
-                            {chunk.length} 字符
+                            {chunk.length} characters
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground font-mono">

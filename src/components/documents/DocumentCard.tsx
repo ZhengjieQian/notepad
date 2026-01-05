@@ -49,12 +49,12 @@ function formatDate(date: Date): string {
 
 function getStatusConfig(status: DocumentStatus) {
   const configs = {
-    pending_upload: { label: "待上传", variant: "outline" as const, color: "text-gray-500" },
-    uploaded: { label: "已上传", variant: "secondary" as const, color: "text-blue-500" },
-    parsing: { label: "解析中", variant: "secondary" as const, color: "text-yellow-500" },
-    processed: { label: "已完成", variant: "default" as const, color: "text-green-500" },
-    failed_parsing: { label: "解析失败", variant: "destructive" as const, color: "text-red-500" },
-    failed_processing: { label: "处理失败", variant: "destructive" as const, color: "text-red-500" },
+    pending_upload: { label: "Pending Upload", variant: "outline" as const, color: "text-gray-500" },
+    uploaded: { label: "Uploaded", variant: "secondary" as const, color: "text-blue-500" },
+    parsing: { label: "Parsing", variant: "secondary" as const, color: "text-yellow-500" },
+    processed: { label: "Completed", variant: "default" as const, color: "text-green-500" },
+    failed_parsing: { label: "Parse Failed", variant: "destructive" as const, color: "text-red-500" },
+    failed_processing: { label: "Process Failed", variant: "destructive" as const, color: "text-red-500" },
   };
   return configs[status] || configs.pending_upload;
 }
@@ -65,26 +65,26 @@ export default function DocumentCard({ id, fileName, size, status, createdAt }: 
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    console.log("开始删除文档:", id);
+    console.log("Starting document deletion:", id);
     setIsDeleting(true);
 
     try {
-      console.log("发送删除请求到:", `/api/documents/${id}`);
+      console.log("Sending delete request to:", `/api/documents/${id}`);
       const response = await fetch(`/api/documents/${id}`, {
         method: "DELETE",
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "删除失败");
+        throw new Error(error.error || "Delete failed");
       }
 
-      console.log("删除成功，刷新页面");
-      // 删除成功，刷新页面
+      console.log("Deletion successful, refreshing page");
+      // Deletion successful, refresh the page
       router.refresh();
     } catch (error: any) {
-      console.error("删除文档失败:", error);
-      alert(`删除失败: ${error.message}`);
+      console.error("Document deletion failed:", error);
+      alert(`Delete failed: ${error.message}`);
       setIsDeleting(false);
     }
   };
@@ -123,7 +123,7 @@ export default function DocumentCard({ id, fileName, size, status, createdAt }: 
         </CardContent>
       </div>
 
-      {/* 删除按钮 - 放在卡片底部右下角 */}
+      {/* Delete button - positioned at bottom right of card */}
       <CardFooter className="pt-0 pb-3 px-6 flex justify-end">
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -132,29 +132,29 @@ export default function DocumentCard({ id, fileName, size, status, createdAt }: 
               size="sm"
               className="h-8 px-3"
               onClick={(e) => {
-                console.log("删除按钮被点击了！");
-                e.stopPropagation(); // 阻止事件冒泡到卡片的点击事件
+                console.log("Delete button clicked!");
+                e.stopPropagation(); // Prevent event bubbling to card click handler
               }}
             >
               <Trash2 className="h-4 w-4 mr-1" />
-              删除
+              Delete
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>确认删除文档？</AlertDialogTitle>
+              <AlertDialogTitle>Confirm Document Deletion?</AlertDialogTitle>
               <AlertDialogDescription>
-                此操作无法撤销。将永久删除文档 &quot;{fileName}&quot; 及其在云端的文件。
+                This action cannot be undone. This will permanently delete document &quot;{fileName}&quot; and its files in cloud storage.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
                 disabled={isDeleting}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
-                {isDeleting ? "删除中..." : "确认删除"}
+                {isDeleting ? "Deleting..." : "Confirm Delete"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

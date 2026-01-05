@@ -73,13 +73,13 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ 
             message: `Successfully vectorized and stored document ${documentId}`,
             chunkCount: lcDocuments.length,
-            // 返回前3个块的预览信息，方便查看分块效果
+            // Return preview of first 3 chunks for verification
             sampleChunks: chunks.slice(0, 3).map((chunk, i) => ({
                 index: i,
                 length: chunk.length,
                 preview: chunk.substring(0, 100) + (chunk.length > 100 ? '...' : '')
             })),
-            // 返回embedding测试结果
+            // Return embedding test results for validation
             embeddingPreview: {
                 dimension: testEmbedding.length,
                 firstValues: testEmbedding.slice(0, 10),
