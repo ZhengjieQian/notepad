@@ -85,6 +85,15 @@ model Document {
   size          Int?     // File size (bytes)
   status        String   @default("pending_upload") // pending_upload, uploaded, processing, processed, failed
   extractedText String?  @db.Text // Parsed text (can be long)
+  
+  // Vectorization fields
+  embeddings    String?  @db.Text // JSON string storing chunked embeddings
+  chunkCount    Int?     // Number of text chunks
+  embeddingModel String? // Model used for embeddings (e.g., "text-embedding-ada-002")
+  vectorizedAt  DateTime? // Timestamp when embeddings were generated
+  uploadedToPinecone Boolean @default(false) // Whether embeddings have been uploaded to Pinecone
+  pineconeUploadedAt DateTime? // Timestamp when uploaded to Pinecone
+  
   userId        String   // Foreign key, links to User
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

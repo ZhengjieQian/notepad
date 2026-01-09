@@ -161,7 +161,10 @@ export default async function DocumentDetailPage({
             {/* Vectorization button */}
             <VectorizeButton 
               documentId={document.id} 
-              extractedText={document.extractedText} 
+              extractedText={document.extractedText}
+              hasEmbeddings={!!document.embeddings}
+              uploadedToPinecone={document.uploadedToPinecone}
+              chunkCount={document.chunkCount}
             />
 
             <Card>
