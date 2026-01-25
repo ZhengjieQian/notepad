@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, Calendar, HardDrive, Download, ArrowLeft } from "lucide-react";
+import { FileText, Calendar, HardDrive, Download, ArrowLeft, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import VectorizeButton from "@/components/documents/VectorizeButton";
 
@@ -151,6 +151,16 @@ export default async function DocumentDetailPage({
                   Download Original File
                 </Button>
               </Link>
+              
+              {/* Chat button - only show if vectorized */}
+              {document.uploadedToPinecone && (
+                <Link href={`/chat/${document.id}`}>
+                  <Button variant="default">
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Chat with Document
+                  </Button>
+                </Link>
+              )}
             </div>
           </CardContent>
         </Card>

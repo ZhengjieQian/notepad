@@ -34,6 +34,7 @@ async function getDocumentsFromDb(userId: string) {
       contentType: true,
       createdAt: true,
       updatedAt: true,
+      uploadedToPinecone: true,
     },
   });
   return documents;
@@ -70,6 +71,7 @@ export default async function DocumentsPage() {
               size={doc.size}
               status={doc.status as any}
               createdAt={doc.createdAt}
+              uploadedToPinecone={doc.uploadedToPinecone}
             />
           ))}
         </div>

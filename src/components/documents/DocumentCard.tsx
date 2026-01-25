@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { FileText, Calendar, HardDrive, Trash2 } from "lucide-react";
+import { FileText, Calendar, HardDrive, Trash2, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,6 +27,7 @@ interface DocumentCardProps {
   size: number | null;
   status: DocumentStatus;
   createdAt: Date;
+  uploadedToPinecone?: boolean;
 }
 
 function formatFileSize(bytes: number | null): string {
@@ -59,7 +60,7 @@ function getStatusConfig(status: DocumentStatus) {
   return configs[status] || configs.pending_upload;
 }
 
-export default function DocumentCard({ id, fileName, size, status, createdAt }: DocumentCardProps) {
+export default function DocumentCard({ id, fileName, size, status, createdAt, uploadedToPinecone = false }: DocumentCardProps) {
   const statusConfig = getStatusConfig(status);
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -124,7 +125,25 @@ export default function DocumentCard({ id, fileName, size, status, createdAt }: 
       </div>
 
       {/* Delete button - positioned at bottom right of card */}
-      <CardFooter className="pt-0 pb-3 px-6 flex justify-end">
+      <CardFooter className="pt-0 pb-3 px-6 flex justify-between items-center gap-2">
+        {/* Chat button */}
+        {uploadedToPinecone && (
+          <Button
+            variant="default"
+            size="sm"
+            className="h-8 px-3"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/chat/${id}`);
+            }}
+          >
+            <MessageSquare className="h-4 w-4 mr-1" />
+            Chat
+          </Button>
+        )}
+        
+        <div className="flex-1" />
+        
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
