@@ -99,4 +99,22 @@ model Document {
   updatedAt     DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vocabulary VocabularyWord[] // Relation to vocabulary words
+}
+
+// VocabularyWord model - Stores AI-extracted terms and definitions from documents
+model VocabularyWord {
+  id           String    @id @default(cuid())
+  term         String                             // The extracted term/concept
+  definition   String    @db.Text                 // Definition of the term
+  category     String?                            // Optional category: technical, business, general, acronym
+  documentId   String                             // Foreign key referencing Document.id
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  document     Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  // Index for faster term lookups
+  @@index([documentId])
+  @@index([term])
 }

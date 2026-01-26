@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, Calendar, HardDrive, Download, ArrowLeft, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import VectorizeButton from "@/components/documents/VectorizeButton";
+import ExtractVocabularyButton from "@/components/documents/ExtractVocabularyButton";
 
 type DocumentStatus = "pending_upload" | "uploaded" | "parsing" | "processed" | "failed_parsing" | "failed_processing";
 
@@ -175,6 +176,12 @@ export default async function DocumentDetailPage({
               hasEmbeddings={!!document.embeddings}
               uploadedToPinecone={document.uploadedToPinecone}
               chunkCount={document.chunkCount}
+            />
+
+            {/* Vocabulary extraction button */}
+            <ExtractVocabularyButton
+              documentId={document.id}
+              extractedText={document.extractedText}
             />
 
             <Card>
