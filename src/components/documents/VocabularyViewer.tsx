@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -152,8 +152,8 @@ function VocabularyCardWithTts({
   const [isLoadingDef, setIsLoadingDef] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isTruncated, setIsTruncated] = useState(false);
-  const textRef = React.useRef<HTMLParagraphElement>(null);
-  const audioRef = React.useRef<HTMLAudioElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   // Check if text is actually truncated
   useEffect(() => {
