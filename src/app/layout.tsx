@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 
 import { AppProviders } from "@/components/providers/app-providers"
 import { SessionMenuLink } from "@/components/ui/session-menu-link"
+import { ThemeSwitcher } from "@/components/ui/theme-switcher"
 import { authConfig } from "@/app/api/auth/[...nextauth]/route"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
@@ -32,7 +33,7 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig)
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -44,6 +45,7 @@ export default async function RootLayout({
                   KnowFlow AI
                 </Link>
                 <div className="flex items-center gap-4">
+                  <ThemeSwitcher />
                   <SessionMenuLink />
                 </div>
               </div>
