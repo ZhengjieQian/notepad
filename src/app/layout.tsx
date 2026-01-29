@@ -38,8 +38,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppProviders session={session}>
-          <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b bg-card/40 backdrop-blur">
+          <div className="flex flex-col min-h-full bg-background text-foreground">
+            <header className="border-b bg-card/40 backdrop-blur flex-shrink-0">
               <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
                 <Link href="/" className="text-base font-semibold tracking-tight">
                   KnowFlow AI

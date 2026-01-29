@@ -50,7 +50,7 @@ export default async function DocumentsPage() {
   const documents = await getDocumentsFromDb(session.user.id);
 
   return (
-    <main className="min-h-screen bg-background px-4 py-12">
+    <main className="flex-1 bg-background px-4 py-12">
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">

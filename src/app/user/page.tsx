@@ -13,7 +13,7 @@ export default async function UserPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-4xl space-y-6 px-6 py-10">
+    <main className="flex-1 mx-auto w-full max-w-4xl space-y-6 px-6 py-10">
       <UserIdentityCard
         fallbackName={session.user.name ?? "Unknown user"}
         fallbackEmail={session.user.email ?? "Not provided"}

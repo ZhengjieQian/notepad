@@ -144,9 +144,9 @@ export default function ChatPageClient({ document }: ChatPageClientProps) {
   }, []);
 
   return (
-    <main className="flex flex-col h-screen bg-background">
+    <main className="flex flex-col flex-1 bg-background overflow-hidden">
       {/* Header */}
-      <div className="border-b bg-background p-4">
+      <div className="border-b bg-background p-4 flex-shrink-0">
         <div className="max-w-6xl mx-auto flex items-center gap-4">
           <Link href={`/documents/${document.id}`}>
             <Button variant="ghost" size="sm">
@@ -177,22 +177,15 @@ export default function ChatPageClient({ document }: ChatPageClientProps) {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full max-w-4xl mx-auto">
+      <div className="flex-1 overflow-hidden min-h-0">
+        <div className="h-full max-w-4xl mx-auto w-full">
           <MessageList messages={messages} />
         </div>
       </div>
 
-      {/* Input Area */}
-      <MessageInput
-        onSendMessage={handleSendMessage}
-        disabled={!document.uploadedToPinecone}
-        isLoading={isStreaming}
-      />
-
       {/* Warning if not vectorized */}
       {!document.uploadedToPinecone && (
-        <div className="border-t bg-amber-50 dark:bg-amber-950 p-4">
+        <div className="border-t bg-amber-50 dark:bg-amber-950 p-4 flex-shrink-0">
           <div className="max-w-4xl mx-auto">
             <p className="text-sm text-amber-800 dark:text-amber-200">
               ⚠️ This document hasn&apos;t been vectorized yet. Please go back and complete the vectorization process first.
@@ -200,6 +193,15 @@ export default function ChatPageClient({ document }: ChatPageClientProps) {
           </div>
         </div>
       )}
+
+      {/* Input Area */}
+      <div className="border-t bg-background p-4 flex-shrink-0">
+        <MessageInput
+          onSendMessage={handleSendMessage}
+          disabled={!document.uploadedToPinecone}
+          isLoading={isStreaming}
+        />
+      </div>
     </main>
   );
 }

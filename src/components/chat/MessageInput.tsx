@@ -33,29 +33,27 @@ export default function MessageInput({
   };
 
   return (
-    <div className="border-t bg-background p-4">
-      <div className="flex gap-2 max-w-4xl mx-auto">
-        <Input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask something about the document..."
-          disabled={disabled || isLoading}
-          className="flex-1"
-        />
-        <Button
-          onClick={handleSend}
-          disabled={disabled || isLoading || !inputValue.trim()}
-          size="icon"
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
+    <div className="flex gap-2 w-full">
+      <Input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyPress={handleKeyPress}
+        placeholder="Ask something about the document..."
+        disabled={disabled || isLoading}
+        className="flex-1"
+      />
+      <Button
+        onClick={handleSend}
+        disabled={disabled || isLoading || !inputValue.trim()}
+        size="icon"
+      >
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Send className="h-4 w-4" />
+        )}
+      </Button>
     </div>
   );
 }

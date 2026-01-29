@@ -8,7 +8,7 @@ export default async function Home() {
   const session = await getServerSession(authConfig)
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+    <main className="flex-1 flex flex-col items-center justify-center bg-background px-4 py-12">
       <div className="flex flex-col items-center gap-6 text-center">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Welcome to KnowFlow AI
