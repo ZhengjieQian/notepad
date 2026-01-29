@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, Calendar, HardDrive, Download, ArrowLeft, MessageSquare } from "lucide-react";
+import { FileText, Calendar, HardDrive, Download, ArrowLeft, MessageSquare, BookOpen } from "lucide-react";
 import Link from "next/link";
 import VectorizeButton from "@/components/documents/VectorizeButton";
 import ExtractVocabularyButton from "@/components/documents/ExtractVocabularyButton";
@@ -162,6 +162,14 @@ export default async function DocumentDetailPage({
                   </Button>
                 </Link>
               )}
+
+              {/* Vocabulary page button */}
+              <Link href={`/documents/${document.id}/vocabulary`}>
+                <Button variant="outline">
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  View Vocabulary
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
